@@ -1,0 +1,9 @@
+{
+    "path" : "C:/Users/olran/Knightec/R/ames_housing_data",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

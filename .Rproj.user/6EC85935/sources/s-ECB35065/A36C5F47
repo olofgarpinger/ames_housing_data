@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1522826411155.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "A36C5F47",
+    "lastKnownWriteTime" : 1522909624,
+    "last_content_update" : 1522909624617,
+    "path" : "C:/Users/olran/Knightec/R/ames_housing_data/EDA.R",
+    "project_path" : "EDA.R",
+    "properties" : {
+        "cursorPosition" : "2,0",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
