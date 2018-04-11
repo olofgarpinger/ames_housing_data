@@ -9,11 +9,6 @@ ames %>% count(MSSubClass) %>% arrange(n)
 ames %>% ggplot(aes(as.ordered(MSSubClass), SalePrice)) + geom_boxplot(varwidth = T)
 
 # MSZoning, 5 levels
-# Residential Low Density Zone "RL" (sec 29.701)
-# Residential Medium Density Zone "RM" (sec 29.702)
-# Residential High Density Zone "RH" (sec 29.704)
-# Floating Village Residential (FV)
-# C (all)? Commercial districts?
 ames %>% count(MSZoning) %>% arrange(n)
 ames %>% ggplot(aes(as.factor(MSZoning), SalePrice)) + geom_boxplot(varwidth = T)
 
@@ -21,24 +16,33 @@ ames %>% ggplot(aes(as.factor(MSZoning), SalePrice)) + geom_boxplot(varwidth = T
 # 50, 60, 65, 70, 75, 80, 85 most common
 ames %>% ggplot(aes(LotFrontage)) + geom_histogram(binwidth = 1)
 ames %>% count(LotFrontage) %>% na.omit() %>% arrange(desc(n))
-ames %>% ggplot(aes(LotFrontage, SalePrice)) + geom_point(alpha = 0.1, width = 1, height = 1)
+ames %>% 
+  ggplot(aes(LotFrontage, SalePrice)) + 
+  geom_point(alpha = 0.1, width = 1, height = 1) +
+  geom_smooth(method = "lm")
 
 # LotArea, integer values, Lot size in square feet
 ames %>% ggplot(aes(LotArea)) + geom_histogram(binwidth = 500) + xlim(0, 30000)
 ames %>% count(LotArea) %>% na.omit() %>% arrange(desc(n))
-ames %>% ggplot(aes(LotArea, SalePrice)) + geom_point(alpha = 0.1, width = 1, height = 1) + xlim(0, 30000)
+ames %>% ggplot(aes(LotArea, SalePrice)) + 
+  geom_point(alpha = 0.1, width = 1, height = 1) + 
+  geom_smooth() +
+  xlim(0, 30000)
 
 # Street, street type pave or gravel, not enough diversity in data => remove feature
 ames %>% count(Street) %>% na.omit() %>% arrange(desc(n))
 
 # Alley, Type of alley access, not enough diversity in data => remove feature
 ames %>% count(Alley) %>% arrange(desc(n))
+ames %>% ggplot(aes(Alley, SalePrice)) + geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ Alley, data = ames))
 
 # General shape of property, 4 levels (Reg Regular, IR1	Slightly irregular, IR2	Moderately Irregular,
 # IR3	Irregular), collapse all irregular to one?
 ames %>% count(LotShape) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.factor(LotShape), SalePrice)) + geom_boxplot(varwidth = T)
 ames %>% ggplot(aes(SalePrice, y = ..density.., col = as.factor(LotShape))) + geom_freqpoly()
+summary(lm(SalePrice ~ LotShape, data = ames))
 
 # LandContour, Flatness of the property, 4 levels (Lvl - Near Flat/Level, 
 # Bnk	Banked - Quick and significant rise from street grade to building,
@@ -46,6 +50,7 @@ ames %>% ggplot(aes(SalePrice, y = ..density.., col = as.factor(LotShape))) + ge
 ames %>% count(LandContour) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.factor(LandContour), SalePrice)) + geom_boxplot(varwidth = T)
 ames %>% ggplot(aes(SalePrice, y = ..density.., col = as.factor(LandContour))) + geom_freqpoly(binwidth = 50000)
+summary(lm(SalePrice ~ LandContour, data = ames))
 
 # Utilities, Type of utilities available, not enough diversity in data => remove feature
 ames %>% count(Utilities) %>% arrange(desc(n))
@@ -54,20 +59,24 @@ ames %>% count(Utilities) %>% arrange(desc(n))
 # FR2	Frontage on 2 sides of property, FR3	Frontage on 3 sides of property)
 ames %>% count(LotConfig) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.factor(LotConfig), SalePrice)) + geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ LotConfig, data = ames))
 
 # LandSlope, Slope of property, not enough diversity in data => remove feature
 ames %>% count(LandSlope) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.factor(LandSlope), SalePrice)) + geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ LandSlope, data = ames))
 
 # Neighborhood, Physical locations within Ames city limits, 25 levels
 ames %>% count(Neighborhood) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(Neighborhood, SalePrice, FUN=median), SalePrice)) + geom_boxplot(varwidth = T) + coord_flip()
+summary(lm(SalePrice ~ Neighborhood, data = ames))
 
 # Condition1, Proximity to various conditions, 9 levels
 ames %>% count(Condition1) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(Condition1, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T) + 
   coord_flip()
+summary(lm(SalePrice ~ Condition1, data = ames))
 
 # Condition2, Proximity to various conditions (if more than one is present), 9 levels,
 # not enough diversity in data => remove feature
@@ -83,30 +92,37 @@ ames %>% count(BldgType) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(BldgType, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T) + 
   coord_flip()
+summary(lm(SalePrice ~ BldgType, data = ames))
 
 # HouseStyle, Style of dwelling, 8 levels
 ames %>% count(HouseStyle) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(HouseStyle, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T) + 
   coord_flip()
+summary(lm(SalePrice ~ HouseStyle, data = ames))
 
 # OverallQual, Rates the overall material and finish of the house, Integers 1-10
 ames %>% count(OverallQual) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(OverallQual, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T) + 
   coord_flip()
+summary(lm(SalePrice ~ as.factor(OverallQual), data = ames))
 
 # OverallCond, Rates the overall condition of the house, Integers 1-9
 ames %>% count(OverallCond) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(OverallCond, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T) + 
   coord_flip()
+summary(lm(SalePrice ~ as.factor(OverallCond), data = ames))
 
 # YearBuilt, Original construction date, integer value
 ames %>% count(YearBuilt) %>% arrange(desc(n))
 ames %>% ggplot(aes(YearBuilt, SalePrice)) + 
   geom_jitter(aes(col = as.factor(OverallQual)), width = 0.1, height = 0, alpha = 1) +
-  geom_smooth(method = "lm")
+  geom_smooth(span = 0.7, method = "loess")
+summary(lm(SalePrice ~ YearBuilt, data = ames))
+
+########################################################
 
 # YearRemodAdd, Remodel date (same as construction date if no remodeling or additions), integer value
 # Seems strange that the lower limit is 1950 with a lot of houses. Seems like an error.
@@ -478,9 +494,9 @@ ames %>% mutate(HouseAge = YrSold - YearBuilt) %>%
 # PCA possible on categorical data?: https://stats.stackexchange.com/questions/5774/can-principal-component-analysis-be-applied-to-datasets-containing-a-mix-of-cont
 
 ames %>% 
-  select(-(Street:Alley), -Utilities, -LandSlope, -Condition2, -RoofMatl, -BsmtFinSF2, -Heating,
-         -`1stFlrSF`, -`2ndFlrSF`, -LowQualFinSF, -BsmtHalfBath, -PoolArea, -PoolQC, -MiscFeature,
-         -MiscVal)
+  select(-(Street:Alley), -Utilities, -Condition2, -RoofMatl, -BsmtFinSF2, -Heating,
+         -`1stFlrSF`, -`2ndFlrSF`, -LowQualFinSF, -BsmtHalfBath, -PoolArea, -PoolQC, 
+         -MiscFeature, -MiscVal)
 
 
 
