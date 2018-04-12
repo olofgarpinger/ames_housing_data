@@ -122,20 +122,23 @@ ames %>% ggplot(aes(YearBuilt, SalePrice)) +
   geom_smooth(span = 0.7, method = "loess")
 summary(lm(SalePrice ~ YearBuilt, data = ames))
 
-########################################################
-
 # YearRemodAdd, Remodel date (same as construction date if no remodeling or additions), integer value
-# Seems strange that the lower limit is 1950 with a lot of houses. Seems like an error.
+# Seems strange that the lower limit is 1950 with a lot of houses. Seems like an error. Probably
+# a good idea to combine with YearBuilt in some way.
 ames %>% count(YearRemodAdd) %>% arrange(desc(n))
-ames %>% ggplot(aes(YearRemodAdd, SalePrice)) + 
+ames %>% filter(YearRemodAdd > 1950) %>% ggplot(aes(YearRemodAdd)) + 
+  geom_histogram(binwidth = 1)
+ames %>% filter(YearRemodAdd > 1950) %>% ggplot(aes(YearRemodAdd, SalePrice)) + 
   geom_jitter(aes(col = as.factor(OverallQual)), width = 0.1, height = 0, alpha = 1) +
-  geom_smooth(method = "lm")
+  geom_smooth(method = "loess")
+summary(lm(SalePrice ~ YearRemodAdd, data = ames))
 
 # RoofStyle: Type of roof, 6 levels
 ames %>% count(RoofStyle) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(RoofStyle, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T) + 
   coord_flip()
+summary(lm(SalePrice ~ RoofStyle, data = ames))
 
 # RoofMatl: Roof material, 8 levels, not enough diversity in data => remove feature
 ames %>% count(RoofMatl) %>% arrange(desc(n))
@@ -145,12 +148,14 @@ ames %>% count(Exterior1st) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(Exterior1st, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T) + 
   coord_flip()
+summary(lm(SalePrice ~ Exterior1st, data = ames))
 
 # Exterior2nd: Exterior covering on house, (if more than one material) 16 levels
 ames %>% count(Exterior2nd) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(Exterior2nd, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T) + 
   coord_flip()
+summary(lm(SalePrice ~ Exterior2nd, data = ames))
 
 # MasVnrType: Masonry veneer type, 4 levels (BrkCmn -	Brick Common, BrkFace - Brick Face,
 # CBlock - Cinder Block, None -	None, Stone - Stone)
