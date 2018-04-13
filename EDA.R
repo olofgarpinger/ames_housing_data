@@ -161,33 +161,37 @@ summary(lm(SalePrice ~ Exterior2nd, data = ames))
 # CBlock - Cinder Block, None -	None, Stone - Stone)
 ames %>% count(MasVnrType) %>% arrange(desc(n))
 ames %>% filter(!is.na(MasVnrType)) %>% ggplot(aes(reorder(MasVnrType, SalePrice, FUN=median), SalePrice)) + 
-  geom_boxplot(varwidth = T) + 
-  coord_flip()
+  geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ MasVnrType, data = ames))
 
 # MasVnrArea: Masonry veneer area in square feet, integer value
 # A lot of it at zero.
 ames %>% count(MasVnrArea) %>% arrange(desc(n))
 ames %>% ggplot(aes(MasVnrArea, SalePrice)) + 
   geom_jitter(width = 0.1, height = 0, alpha = 0.2) +
-  geom_smooth(method = "lm")
+  geom_smooth()
+summary(lm(SalePrice ~ MasVnrArea, data = ames))
 
 # ExterQual: Evaluates the quality of the material on the exterior, 5 levels (Po poor, Fa fair, 
 # TA typical/average, Gd Good, Excellent Ex)
 ames %>% count(ExterQual) %>% arrange(desc(n)) 
 ames %>% filter(!is.na(ExterQual)) %>% ggplot(aes(reorder(ExterQual, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ ExterQual, data = ames))
 
 # ExterCond: Evaluates the present condition of the material on the exterior, 5 levels (Po poor,
 # Fa fair, TA typical/average, Gd Good, Excellent Ex)
 ames %>% count(ExterCond) %>% arrange(desc(n)) 
 ames %>% ggplot(aes(reorder(ExterCond, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ ExterCond, data = ames))
 
 # Foundation: Type of foundation, 5 levels (BrkTil	Brick & Tile, CBlock Cinder Block, 
 # PConc	Poured Concrete, Slab Slab, Stone Stone, Wood, Wood)
 ames %>% count(Foundation) %>% arrange(desc(n)) 
 ames %>% ggplot(aes(reorder(Foundation, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ Foundation, data = ames))
 
 # BsmtQual: Evaluates the height of the basement, 6 levels (Po poor,
 # Fa fair, TA typical/average, Gd Good, Excellent Ex, NA No Basement) 
@@ -195,6 +199,7 @@ ames %>% ggplot(aes(reorder(Foundation, SalePrice, FUN=median), SalePrice)) +
 ames %>% count(BsmtQual) %>% arrange(desc(n)) 
 ames %>% ggplot(aes(reorder(BsmtQual, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ BsmtQual, data = ames))
 
 # BsmtCond: Evaluates the general condition of the basement, 6 levels (Po poor,
 # Fa fair, TA typical/average, Gd Good, Excellent Ex, NA No Basement)
@@ -202,6 +207,7 @@ ames %>% ggplot(aes(reorder(BsmtQual, SalePrice, FUN=median), SalePrice)) +
 ames %>% count(BsmtCond) %>% arrange(desc(n)) 
 ames %>% ggplot(aes(reorder(BsmtCond, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ BsmtCond, data = ames))
 
 # BsmtExposure: Refers to walkout or garden level walls, 5 levels (Gd	Good Exposure,
 # Av	Average Exposure (split levels or foyers typically score average or above),	
@@ -210,40 +216,50 @@ ames %>% ggplot(aes(reorder(BsmtCond, SalePrice, FUN=median), SalePrice)) +
 ames %>% count(BsmtExposure) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(BsmtExposure, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ BsmtExposure, data = ames))
 
+###### Combine these variables in some other way ######
 # BsmtFinType1: Rating of basement finished area, 7 levels
 ames %>% count(BsmtFinType1) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(BsmtFinType1, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ BsmtFinType1, data = ames))
 
 # BsmtFinSF1: Type 1 finished square feet, integer
 ames %>% count(BsmtFinSF1) %>% arrange(desc(n))
 ames %>% ggplot(aes(BsmtFinSF1, SalePrice)) + 
   geom_point(alpha = 0.1) +
   geom_smooth(method = "lm")
+summary(lm(SalePrice ~ BsmtFinSF1, data = ames))
 
-# BsmtFinType2: Rating of basement finished area (if multiple types), 7 levels
+# BsmtFinType2: Rating of basement finished area (if multiple types), 7 levels, remove?
 ames %>% count(BsmtFinType2) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(BsmtFinType2, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ BsmtFinType2, data = ames))
 
 # BsmtFinSF2: Type 2 finished square feet, integer, doesn't add much => remove variable
 ames %>% count(BsmtFinSF2) %>% arrange(desc(n))
 ames %>% ggplot(aes(BsmtFinSF2, SalePrice)) + 
   geom_point(alpha = 0.1) +
   geom_smooth(method = "lm")
+summary(lm(SalePrice ~ BsmtFinSF2, data = ames))
 
 # BsmtUnfSF: Unfinished square feet of basement area
 ames %>% count(BsmtUnfSF) %>% arrange(desc(n))
 ames %>% ggplot(aes(BsmtUnfSF, SalePrice)) + 
   geom_point(alpha = 0.1) +
   geom_smooth(method = "lm")
+summary(lm(SalePrice ~ BsmtUnfSF, data = ames))
 
 # TotalBsmtSF: Total square feet of basement area
 ames %>% count(TotalBsmtSF) %>% arrange(desc(n))
 ames %>% ggplot(aes(TotalBsmtSF, SalePrice)) + 
   geom_point(alpha = 0.1) +
-  geom_smooth(method = "lm")
+  geom_smooth(method = "loess", span = 1)
+summary(lm(SalePrice ~ TotalBsmtSF, data = ames))
+
+######################################################
 
 # Heating: Type of heating, 6 levels (Floor	Floor Furnace, GasA	Gas forced warm air furnace,
 # GasW	Gas hot water or steam heat, Grav	Gravity furnace, OthW	Hot water or steam heat other than gas,
@@ -256,25 +272,30 @@ ames %>% ggplot(aes(reorder(Heating, SalePrice, FUN=median), SalePrice)) +
 ames %>% count(HeatingQC) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(HeatingQC, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ HeatingQC, data = ames))
 
-# CentralAir: Central air conditioning, 2 levels(N	No, Y	Yes)
+# CentralAir: Central air conditioning, 2 levels(N No, Y	Yes)
 ames %>% count(CentralAir) %>% arrange(desc(n))
 ames %>% ggplot(aes(CentralAir, SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ CentralAir, data = ames))
 
 # Electrical: Electrical system (5 levels, SBrkr	Standard Circuit Breakers & Romex,
-# FuseA	Fuse Box over 60 AMP and all Romex wiring (Average), FuseF	60 AMP Fuse Box and 
+# FuseA	Fuse Box over 60 AMP and all Romex wiring (Average), FuseF 60 AMP Fuse Box and 
 # mostly Romex wiring (Fair), FuseP	60 AMP Fuse Box and mostly knob & tube wiring (poor),
 # Mix	Mixed)
 ames %>% count(Electrical) %>% arrange(desc(n))
 ames %>% ggplot(aes(Electrical, SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ Electrical, data = ames))
 
+####### Combine in any way? Also with Basement? #######
 # 1stFlrSF: First Floor square feet, integer
 ames %>% count(`1stFlrSF`) %>% arrange(desc(n))
 ames %>% ggplot(aes(`1stFlrSF`, SalePrice)) + 
-  geom_point(alpha = 0.1) +
+  geom_point(aes(col = as.ordered(OverallQual)), alpha = 1) +
   geom_smooth(method = "lm")
+summary(lm(SalePrice ~ `1stFlrSF`, data = ames))
 
 # 2ndFlrSF: Second floor square feet, integer
 # How to deal with zeros?
@@ -282,81 +303,102 @@ ames %>% count(`2ndFlrSF`) %>% arrange(desc(n))
 ames %>% ggplot(aes(`2ndFlrSF`, SalePrice)) + 
   geom_point(alpha = 0.1) +
   geom_smooth(method = "lm")
+summary(lm(SalePrice ~ `2ndFlrSF`, data = ames))
 
 # LowQualFinSF: Low quality finished square feet (all floors), weak relation => remove feature
 ames %>% count(LowQualFinSF) %>% arrange(desc(n))
 ames %>% ggplot(aes(LowQualFinSF, SalePrice)) + 
   geom_point(alpha = 0.1) +
   geom_smooth(method = "lm")
+summary(lm(SalePrice ~ LowQualFinSF, data = ames))
 
 # GrLivArea: Above grade (ground) living area square feet. Basically 1st+2nd floor area
 ames %>% count(GrLivArea) %>% arrange(desc(n))
 ames %>% ggplot(aes(GrLivArea, SalePrice)) + 
   geom_point(alpha = 0.1) +
   geom_smooth(method = "lm")
+summary(lm(SalePrice ~ GrLivArea, data = ames))
 
-# BsmtFullBath: Basement full bathrooms, 4 levels 0-3
+######################################################################
+
+####### Combine in any way? ############
+
+# BsmtFullBath: Basement full bathrooms, 4 levels 0-3. Replace with BasementHasBathroom
 ames %>% count(BsmtFullBath) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.factor(BsmtFullBath), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ as.factor(BsmtFullBath), data = ames))
 
-# BsmtHalfBath: Basement half bathrooms, 3 levels 0-2, doesn't seem significant => remove
+# BsmtHalfBath: Basement half bathrooms, 3 levels 0-2
 ames %>% count(BsmtHalfBath) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.factor(BsmtHalfBath), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ as.factor(BsmtHalfBath), data = ames))
 
 # FullBath: Full bathrooms above grade, 4 levels 0-3
 ames %>% count(FullBath) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.factor(FullBath), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ as.factor(FullBath), data = ames))
 
 # HalfBath: Half baths above grade, 3 levels 0-2
 ames %>% count(HalfBath) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.factor(HalfBath), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ as.factor(HalfBath), data = ames))
+
+######################################################################
 
 # BedroomAbvGr: Bedrooms above grade (does NOT include basement bedrooms), 7 levels from 0-8 
 ames %>% count(BedroomAbvGr) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.factor(BedroomAbvGr), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ as.factor(BedroomAbvGr), data = ames))
 
 # KitchenAbvGr: Kitchens above grade
 ames %>% count(KitchenAbvGr) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.factor(KitchenAbvGr), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ as.factor(KitchenAbvGr), data = ames))
 
 # KitchenQual: Kitchen quality, 5 levels (Poor to Excellent)
 ames %>% count(KitchenQual) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(KitchenQual, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ KitchenQual, data = ames))
 
 # TotRmsAbvGrd: Total rooms above grade (does not include bathrooms)
 ames %>% count(TotRmsAbvGrd) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.factor(TotRmsAbvGrd), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ as.factor(TotRmsAbvGrd), data = ames))
 
 # Functional: Home functionality (Assume typical unless deductions are warranted), 7 levels
 # Collapse dysfunctional levels?
 ames %>% count(Functional) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(Functional, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ Functional, data = ames))
 
 # Fireplaces: Number of fireplaces
 ames %>% count(Fireplaces) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.factor(Fireplaces), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ as.factor(Fireplaces), data = ames))
 
 # FireplaceQu: Fireplace quality, 6 levels (NA No fireplace, Poor to Excellent)
 # How to deal with NA?
 ames %>% count(FireplaceQu) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(FireplaceQu, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ as.factor(FireplaceQu), data = ames))
 
 # GarageType: Garage location, 7 levels (NA is no garage)
 # How to deal with NA?
 ames %>% count(GarageType) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(GarageType, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ GarageType, data = ames))
 
 # GarageYrBlt: Year garage was built, integer (NA no garage)
 # Largely the same as YearBuilt (i.e. the house)
@@ -365,6 +407,7 @@ ames %>% count(GarageYrBlt) %>% arrange(desc(n))
 ames %>% ggplot(aes(GarageYrBlt, SalePrice)) + 
   geom_point(alpha = 0.1) +
   geom_smooth(method = "lm")
+summary(lm(SalePrice ~ GarageYrBlt, data = ames))
 
 # GarageFinish: Interior finish of the garage, 4 levels (Fin	Finished, RFn	Rough Finished,	
 # Unf	Unfinished, NA	No Garage)
@@ -372,59 +415,69 @@ ames %>% ggplot(aes(GarageYrBlt, SalePrice)) +
 ames %>% count(GarageFinish) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(GarageFinish, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ GarageFinish, data = ames))
 
 # GarageArea: Size of garage in square feet
 # How to deal with zeros?
 ames %>% count(GarageArea) %>% arrange(desc(n))
 ames %>% ggplot(aes(GarageArea, SalePrice)) + 
   geom_point(alpha = 0.1) +
-  geom_smooth(method = "lm")
+  geom_smooth()
+summary(lm(SalePrice ~ GarageArea, data = ames))
 
 # GarageQual: Garage quality, 4 levels (Poor to Excellent, NA	No Garage)
 ames %>% count(GarageQual) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(GarageQual, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ GarageQual, data = ames))
 
 # GarageCond: Garage condition, 4 levels (Poor to Excellent, NA	No Garage)
 ames %>% count(GarageCond) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(GarageCond, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ GarageCond, data = ames))
 
 # PavedDrive: Paved driveway, 3 levels (Y	Paved, P Partial Pavement, N Dirt/Gravel)
 ames %>% count(PavedDrive) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(PavedDrive, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ PavedDrive, data = ames))
 
 # WoodDeckSF: Wood deck area in square feet
 ames %>% count(WoodDeckSF) %>% arrange(desc(n))
 ames %>% ggplot(aes(WoodDeckSF, SalePrice)) + 
   geom_point(alpha = 0.1) +
   geom_smooth()
+summary(lm(SalePrice ~ WoodDeckSF, data = ames))
 
 # OpenPorchSF: Open porch area in square feet
 ames %>% count(OpenPorchSF) %>% arrange(desc(n))
 ames %>% ggplot(aes(OpenPorchSF, SalePrice)) + 
   geom_point(alpha = 0.1) +
   geom_smooth()
+summary(lm(SalePrice ~ OpenPorchSF, data = ames))
 
 # EnclosedPorch: Enclosed porch area in square feet
 ames %>% count(EnclosedPorch) %>% arrange(desc(n))
 ames %>% ggplot(aes(EnclosedPorch, SalePrice)) + 
   geom_point(alpha = 0.1) +
   geom_smooth()
+summary(lm(SalePrice ~ EnclosedPorch, data = ames))
 
 # 3SsnPorch: Three season porch area in square feet.
-# Few houses that has it (24)
+# Few houses that has it (24) => Remove variable
 ames %>% count(`3SsnPorch`) %>% arrange(desc(n))
 ames %>% ggplot(aes(`3SsnPorch`, SalePrice)) + 
   geom_point(alpha = 0.1) +
   geom_smooth()
+summary(lm(SalePrice ~ `3SsnPorch`, data = ames))
 
 # ScreenPorch: Screen porch area in square feet
 ames %>% count(ScreenPorch) %>% arrange(desc(n))
 ames %>% ggplot(aes(ScreenPorch, SalePrice)) + 
   geom_point(alpha = 0.1) +
   geom_smooth(method = "lm")
+summary(lm(SalePrice ~ ScreenPorch, data = ames))
 
 # PoolArea: Pool area in square feet, too few > 0 => remove
 ames %>% count(PoolArea) %>% arrange(desc(n))
@@ -443,6 +496,7 @@ ames %>% ggplot(aes(reorder(PoolQC, SalePrice, FUN=median), SalePrice)) +
 ames %>% count(Fence) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(Fence, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ Fence, data = ames))
 
 # MiscFeature: Miscellaneous feature not covered in other categories, 6 levels (Elev	Elevator,
 # Gar2	2nd Garage (if not described in garage section), Othr	Other, Shed	Shed (over 100 SF),
@@ -450,12 +504,14 @@ ames %>% ggplot(aes(reorder(Fence, SalePrice, FUN=median), SalePrice)) +
 ames %>% count(MiscFeature) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(MiscFeature, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ MiscFeature, data = ames))
 
 # MiscVal: $Value of miscellaneous feature. Doesn't seem to affect price => remove
 ames %>% count(MiscVal) %>% arrange(desc(n))
 ames %>% ggplot(aes(MiscVal, SalePrice)) + 
   geom_point(aes(col = MiscFeature)) +
   geom_smooth(method = "lm")
+summary(lm(SalePrice ~ MiscVal, data = ames))
 
 # MoSold: Month Sold (MM)
 # Run through lubridate to get month names e.g.
@@ -463,23 +519,31 @@ ames %>% ggplot(aes(MiscVal, SalePrice)) +
 ames %>% count(MoSold) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.ordered(MoSold), SalePrice)) + 
   geom_boxplot(varwidth = T)
+ames %>% ggplot(aes(MoSold)) + 
+  geom_histogram(binwidth = 1)
+summary(lm(SalePrice ~ as.factor(MoSold), data = ames))
 
 # YrSold: Year Sold (YYYY)
 # Perhaps combine with year to get year+month
 ames %>% count(YrSold) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.ordered(YrSold), SalePrice)) + 
   geom_boxplot(varwidth = T)
+ames %>% ggplot(aes(YrSold)) + 
+  geom_histogram(binwidth = 1)
+summary(lm(SalePrice ~ as.factor(YrSold), data = ames))
 
 # SaleType: Type of sale, 10 levels
 ames %>% count(SaleType) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(SaleType, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ as.factor(YrSold), data = ames))
 
 
 # SaleCondition: Condition of sale, 6 levels
 ames %>% count(SaleCondition) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(SaleCondition, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ SaleCondition, data = ames))
 
 # Add feature House
 ames %>% mutate(HouseAge = YrSold - YearBuilt) %>% 
@@ -496,12 +560,12 @@ ames %>% mutate(HouseAge = YrSold - YearBuilt) %>%
 # Transform to ordered factors when needed
 # Add feature age of house
 # Remove known rooms from total rooms above grade?
+# There are some pretty amazing outliers, take a closer look at them! 
 # PCA possible on categorical data?: https://stats.stackexchange.com/questions/5774/can-principal-component-analysis-be-applied-to-datasets-containing-a-mix-of-cont
 
 ames %>% 
-  select(-(Street:Alley), -Utilities, -Condition2, -RoofMatl, -BsmtFinSF2, -Heating,
-         -`1stFlrSF`, -`2ndFlrSF`, -LowQualFinSF, -BsmtHalfBath, -PoolArea, -PoolQC, 
-         -MiscFeature, -MiscVal)
+  select(-(Street:Alley), -Utilities, -Condition2, -RoofMatl, -BsmtFinSF2, -Heating, -`1stFlrSF`, 
+         -`2ndFlrSF`, -LowQualFinSF, -`3SsnPorch`, -PoolArea, -PoolQC, -MiscFeature, -MiscVal)
 
 
 
