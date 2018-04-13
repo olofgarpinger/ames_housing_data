@@ -1,14 +1,32 @@
 library(tidyverse)
 
+# Remove classes with less than N occurences
+remove_classes <- function(col, N) {
+  col <- as.factor(col)
+  keep <- sum(summary(col) > N)
+  col <- fct_lump(col, n = keep)
+}
+
 ames <- read_csv("ames_train.csv")
 dim(ames)
 View(ames)
 
-# MSSubClass - Building class, 15 levels, what does it mean?
-ames %>% count(MSSubClass) %>% arrange(n)
-ames %>% ggplot(aes(as.ordered(MSSubClass), SalePrice)) + geom_boxplot(varwidth = T)
+ames <- ames %>%
+  select(-(Street:Alley), -Utilities, -Condition2, -RoofMatl, -BsmtFinSF2, -Heating, -`1stFlrSF`, 
+         -`2ndFlrSF`, -LowQualFinSF, -`3SsnPorch`, -PoolArea, -PoolQC, -MiscFeature, -MiscVal) %>% 
+  mutate(MSSubClass = remove_classes(MSSubClass, 20),
+         )
 
-# MSZoning, 5 levels
+
+# MSSubClass - Building class, 15 levels, Identifies the type of dwelling involved in the sale.
+ames %>% count(MSSubClass) %>% arrange(n)
+ames %>% ggplot(aes(reorder(as.ordered(MSSubClass), SalePrice, FUN=median), SalePrice), SalePrice) + geom_boxplot(varwidth = T)
+summary(lm(SalePrice ~ as.factor(MSSubClass), data = ames))
+
+
+##################################
+
+# MSZoning, Identifies the general zoning classification of the sale, 5 levels
 ames %>% count(MSZoning) %>% arrange(n)
 ames %>% ggplot(aes(as.factor(MSZoning), SalePrice)) + geom_boxplot(varwidth = T)
 
@@ -563,9 +581,6 @@ ames %>% mutate(HouseAge = YrSold - YearBuilt) %>%
 # There are some pretty amazing outliers, take a closer look at them! 
 # PCA possible on categorical data?: https://stats.stackexchange.com/questions/5774/can-principal-component-analysis-be-applied-to-datasets-containing-a-mix-of-cont
 
-ames %>% 
-  select(-(Street:Alley), -Utilities, -Condition2, -RoofMatl, -BsmtFinSF2, -Heating, -`1stFlrSF`, 
-         -`2ndFlrSF`, -LowQualFinSF, -`3SsnPorch`, -PoolArea, -PoolQC, -MiscFeature, -MiscVal)
 
 
 
