@@ -1,30 +1,44 @@
 library(tidyverse)
 
-# Remove classes with less than N occurences
+# Remove classes with less than N occurences, and transform feature to factor
 remove_classes <- function(col, N) {
   col <- as.factor(col)
   keep <- sum(summary(col) > N)
   col <- fct_lump(col, n = keep)
 }
 
-ames <- read_csv("ames_train.csv")
-dim(ames)
-View(ames)
+# Remove classes with less than N occurances in each feature
+N <- 20
 
+ames <- read_csv("ames_train.csv")
+
+# Remove insignificant features
 ames <- ames %>%
   select(-(Street:Alley), -Utilities, -Condition2, -RoofMatl, -BsmtFinSF2, -Heating, -`1stFlrSF`, 
-         -`2ndFlrSF`, -LowQualFinSF, -`3SsnPorch`, -PoolArea, -PoolQC, -MiscFeature, -MiscVal) %>% 
-  mutate(MSSubClass = remove_classes(MSSubClass, 20),
+         -`2ndFlrSF`, -LowQualFinSF, -`3SsnPorch`, -PoolArea, -PoolQC, -MiscFeature, -MiscVal)
+
+ames <- ames %>%
+  mutate(MSSubClass = remove_classes(MSSubClass, N),
+         MSZoning = remove_classes(MSZoning, N),
+         LotShape = fct_collapse(LotShape,
+                                 IR = c("IR1", "IR2", "IR3")),
+         LandContour = remove_classes(LandContour, N),
+         LotConfig = remove_classes(LotConfig, N),
+         LandSlope = remove_classes(LandSlope, N),
+         Neighborhood = remove_classes(Neighborhood, N),
+         Condition1 = remove_classes(Condition1, N),
+         BldgType = remove_classes(BldgType, N),
+         HouseStyle = remove_classes(HouseStyle, N),
+         YrSinceRemod = ifelse(YearRemodAdd > 1950, YrSold - YearRemodAdd, YrSold - YearBuilt)
          )
 
+dim(ames)
+View(ames)
 
 # MSSubClass - Building class, 15 levels, Identifies the type of dwelling involved in the sale.
 ames %>% count(MSSubClass) %>% arrange(n)
 ames %>% ggplot(aes(reorder(as.ordered(MSSubClass), SalePrice, FUN=median), SalePrice), SalePrice) + geom_boxplot(varwidth = T)
 summary(lm(SalePrice ~ as.factor(MSSubClass), data = ames))
-
-
-##################################
 
 # MSZoning, Identifies the general zoning classification of the sale, 5 levels
 ames %>% count(MSZoning) %>% arrange(n)
@@ -56,7 +70,7 @@ ames %>% ggplot(aes(Alley, SalePrice)) + geom_boxplot(varwidth = T)
 summary(lm(SalePrice ~ Alley, data = ames))
 
 # General shape of property, 4 levels (Reg Regular, IR1	Slightly irregular, IR2	Moderately Irregular,
-# IR3	Irregular), collapse all irregular to one?
+# IR3	Irregular), collapse all irregular to one
 ames %>% count(LotShape) %>% arrange(desc(n))
 ames %>% ggplot(aes(as.factor(LotShape), SalePrice)) + geom_boxplot(varwidth = T)
 ames %>% ggplot(aes(SalePrice, y = ..density.., col = as.factor(LotShape))) + geom_freqpoly()
@@ -120,13 +134,15 @@ ames %>% ggplot(aes(reorder(HouseStyle, SalePrice, FUN=median), SalePrice)) +
 summary(lm(SalePrice ~ HouseStyle, data = ames))
 
 # OverallQual, Rates the overall material and finish of the house, Integers 1-10
+# Keep feature intact as integer for now
 ames %>% count(OverallQual) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(OverallQual, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T) + 
   coord_flip()
-summary(lm(SalePrice ~ as.factor(OverallQual), data = ames))
+summary(lm(SalePrice ~ (OverallQual), data = ames))
 
 # OverallCond, Rates the overall condition of the house, Integers 1-9
+# Keep feature intact as integer for now
 ames %>% count(OverallCond) %>% arrange(desc(n))
 ames %>% ggplot(aes(reorder(OverallCond, SalePrice, FUN=median), SalePrice)) + 
   geom_boxplot(varwidth = T) + 
@@ -150,6 +166,29 @@ ames %>% filter(YearRemodAdd > 1950) %>% ggplot(aes(YearRemodAdd, SalePrice)) +
   geom_jitter(aes(col = as.factor(OverallQual)), width = 0.1, height = 0, alpha = 1) +
   geom_smooth(method = "loess")
 summary(lm(SalePrice ~ YearRemodAdd, data = ames))
+
+# YrSold: Year Sold (YYYY)
+# Perhaps combine with year to get year+month
+ames %>% count(YrSold) %>% arrange(desc(n))
+ames %>% ggplot(aes(as.ordered(YrSold), SalePrice)) + 
+  geom_boxplot(varwidth = T)
+ames %>% ggplot(aes(YrSold)) + 
+  geom_histogram(binwidth = 1)
+summary(lm(SalePrice ~ as.factor(YrSold), data = ames))
+
+# YrSinceRemod
+ames %>% count(YrSinceRemod) %>% arrange(desc(n))
+ames %>% ggplot(aes(YrSinceRemod)) + 
+  geom_histogram(binwidth = 1)
+summary(lm(SalePrice ~ YrSinceRemod, data = ames))
+ames %>% ggplot(aes(YrSinceRemod, SalePrice)) + 
+  geom_jitter(aes(col = as.factor(OverallQual)), width = 0.1, height = 0, alpha = 1) +
+  geom_smooth(span = 0.7, method = "loess")
+
+
+
+
+
 
 # RoofStyle: Type of roof, 6 levels
 ames %>% count(RoofStyle) %>% arrange(desc(n))
@@ -540,15 +579,6 @@ ames %>% ggplot(aes(as.ordered(MoSold), SalePrice)) +
 ames %>% ggplot(aes(MoSold)) + 
   geom_histogram(binwidth = 1)
 summary(lm(SalePrice ~ as.factor(MoSold), data = ames))
-
-# YrSold: Year Sold (YYYY)
-# Perhaps combine with year to get year+month
-ames %>% count(YrSold) %>% arrange(desc(n))
-ames %>% ggplot(aes(as.ordered(YrSold), SalePrice)) + 
-  geom_boxplot(varwidth = T)
-ames %>% ggplot(aes(YrSold)) + 
-  geom_histogram(binwidth = 1)
-summary(lm(SalePrice ~ as.factor(YrSold), data = ames))
 
 # SaleType: Type of sale, 10 levels
 ames %>% count(SaleType) %>% arrange(desc(n))
