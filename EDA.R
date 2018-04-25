@@ -7,6 +7,8 @@ remove_classes <- function(col, N) {
   col <- fct_lump(col, n = keep)
 }
 
+# Create a function that indicates which features satisfy the two points on p. 45 in Applied Predictive Modeling!
+
 ames <- read_csv("ames_train.csv")
 dim(ames)
 View(ames)
@@ -14,8 +16,7 @@ View(ames)
 ames <- ames %>%
   select(-(Street:Alley), -Utilities, -Condition2, -RoofMatl, -BsmtFinSF2, -Heating, -`1stFlrSF`, 
          -`2ndFlrSF`, -LowQualFinSF, -`3SsnPorch`, -PoolArea, -PoolQC, -MiscFeature, -MiscVal) %>% 
-  mutate(MSSubClass = remove_classes(MSSubClass, 20),
-         )
+  mutate(MSSubClass = remove_classes(MSSubClass, 20))
 
 
 # MSSubClass - Building class, 15 levels, Identifies the type of dwelling involved in the sale.
