@@ -7,22 +7,17 @@ remove_classes <- function(col, N) {
   col <- fct_lump(col, n = keep)
 }
 
-<<<<<<< HEAD
 # Create a function that indicates which features satisfy the two points on p. 45 in Applied Predictive Modeling!
-=======
+
+
 # Remove classes with less than N occurances in each feature
 N <- 20
->>>>>>> 72185fc4b470eb2814257406acb7398ba25b8c70
 
 ames <- read_csv("ames_train.csv")
 
 # Remove insignificant features
 ames <- ames %>%
   select(-(Street:Alley), -Utilities, -Condition2, -RoofMatl, -BsmtFinSF2, -Heating, -`1stFlrSF`, 
-<<<<<<< HEAD
-         -`2ndFlrSF`, -LowQualFinSF, -`3SsnPorch`, -PoolArea, -PoolQC, -MiscFeature, -MiscVal) %>% 
-  mutate(MSSubClass = remove_classes(MSSubClass, 20))
-=======
          -`2ndFlrSF`, -LowQualFinSF, -`3SsnPorch`, -PoolArea, -PoolQC, -MiscFeature, -MiscVal)
 
 ames <- ames %>%
@@ -39,7 +34,6 @@ ames <- ames %>%
          HouseStyle = remove_classes(HouseStyle, N),
          YrSinceRemod = ifelse(YearRemodAdd > 1950, YrSold - YearRemodAdd, YrSold - YearBuilt)
          )
->>>>>>> 72185fc4b470eb2814257406acb7398ba25b8c70
 
 dim(ames)
 View(ames)
